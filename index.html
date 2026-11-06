@@ -9,8 +9,8 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://truong2903.github.io/discord-hypesquad-badge/">
     <meta property="og:site_name" content="HypeSquad Tool">
-    <meta property="og:title" content="Nhận Huy Hiệu HypeSquad Discord (1-Click)">
-    <meta property="og:description" content="Nhận huy hiệu Bravery, Brilliance, Balance cực dễ dàng trong 15 giây. Bấm vào trang web để sao chép mã tự động!">
+    <meta property="og:title" content="🌟 Nhận Huy Hiệu HypeSquad Discord (1-Click)">
+    <meta property="og:description" content="Nhận huy hiệu Bravery 💜, Brilliance 🧡, Balance 🩵 cực dễ dàng trong 15 giây. Bấm vào trang web để sao chép mã tự động!">
     <meta name="theme-color" content="#5865F2">
     <meta property="og:image" content="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png">
 
@@ -103,7 +103,7 @@
             transform: translateY(-1px);
         }
         .copy-btn.copied {
-            background: #23a55a;
+            background: #23a55a !important;
         }
         .note {
             margin-top: 16px;
@@ -140,7 +140,7 @@
         </div>
         <div class="step">
             <span class="badge-num">2</span>
-            <span>Mở trình duyệt vào <strong><a href="https://discord.com/app" target="_blank" style="color: #00a8fc;">discord.com/app</a></strong> và đăng nhập.</span>
+            <span>Mở trình duyệt vào <strong><a href="https://discord.com/app" target="_blank" style="color: #00a8fc; text-decoration: none;">discord.com/app</a></strong> và đăng nhập.</span>
         </div>
         <div class="step">
             <span class="badge-num">3</span>
@@ -166,8 +166,9 @@
     <p class="note">🔒 An toàn 100%: Mã chạy trực tiếp trên trình duyệt của bạn, không gửi token đi bất cứ đâu.</p>
 </div>
 
-<script>
-const SCRIPT_CODE = `(() => {
+<!-- Nguồn mã code lưu an toàn trong thẻ textarea, không lo lỗi cú pháp hay escape -->
+<textarea id="codeSource" style="display:none;">
+(() => {
     function getDiscordToken() {
         let token = null;
         try {
@@ -175,10 +176,14 @@ const SCRIPT_CODE = `(() => {
                 for (let e of Object.values(o.c)) {
                     try {
                         if (!e.exports || e.exports === window) continue;
-                        if (typeof e.exports.getToken === 'function') { token = e.exports.getToken(); if (token) return; }
+                        if (typeof e.exports.getToken === 'function') {
+                            token = e.exports.getToken();
+                            if (token) return;
+                        }
                         for (let prop in e.exports) {
                             if (e.exports[prop] && typeof e.exports[prop].getToken === 'function' && e.exports[prop][Symbol.toStringTag] !== 'IntlMessagesProxy') {
-                                token = e.exports[prop].getToken(); if (token) return;
+                                token = e.exports[prop].getToken();
+                                if (token) return;
                             }
                         }
                     } catch (err) {}
@@ -195,7 +200,8 @@ const SCRIPT_CODE = `(() => {
     const modal = document.createElement('div');
     modal.id = 'hypesquad-popup-modal';
     modal.style = "position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #2b2d31; border: 2px solid #5865F2; border-radius: 12px; padding: 24px; z-index: 999999; box-shadow: 0 12px 36px rgba(0,0,0,0.7); font-family: sans-serif; color: white; width: 320px; text-align: center;";
-    modal.innerHTML = \`
+
+    modal.innerHTML = `
         <h3 style="margin: 0 0 8px 0; font-size: 18px; color: #5865F2;">CHỌN HUY HIỆU HYPESQUAD</h3>
         <p style="font-size: 13px; color: #b5bac1; margin-bottom: 16px;">Bấm chọn 1 trong 3 nhà bạn thích:</p>
         <button id="btn-bravery" style="width: 100%; margin: 6px 0; padding: 10px; background: #9b59b6; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">💜 House of Bravery</button>
@@ -204,33 +210,38 @@ const SCRIPT_CODE = `(() => {
         <button id="btn-remove" style="width: 100%; margin: 6px 0; padding: 8px; background: #4e5058; color: #ff7373; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">❌ Gỡ huy hiệu</button>
         <div id="status-msg" style="margin-top: 12px; font-size: 13px; font-weight: bold; min-height: 18px;"></div>
         <button id="btn-close" style="margin-top: 10px; background: transparent; border: none; color: #949ba4; cursor: pointer; text-decoration: underline; font-size: 12px;">Đóng</button>
-    \`;
+    `;
+
     document.body.appendChild(modal);
 
     const statusEl = document.getElementById('status-msg');
+
     async function applyBadge(houseId) {
         statusEl.style.color = '#e2e4e9';
         statusEl.innerText = '⏳ Đang xử lý...';
+
         const token = getDiscordToken();
         if (!token) {
             statusEl.style.color = '#f23f43';
-            statusEl.innerText = '❌ Vui lòng F5 tải lại trang Discord rồi thử lại!';
+            statusEl.innerText = '❌ Không tìm thấy Token! Hãy F5 lại Discord rồi thử lại.';
             return;
         }
+
         try {
-            const res = houseId === 0 
+            const res = houseId === 0
                 ? await fetch('https://discord.com/api/v9/hypesquad/online', { method: 'DELETE', headers: { 'Authorization': token } })
                 : await fetch('https://discord.com/api/v9/hypesquad/online', { method: 'POST', headers: { 'Authorization': token, 'Content-Type': 'application/json' }, body: JSON.stringify({ house_id: houseId }) });
+
             if (res.status === 204) {
                 statusEl.style.color = '#23a55a';
                 statusEl.innerText = '🎉 Thành công! Nhấn F5 để thấy huy hiệu.';
             } else {
                 statusEl.style.color = '#f23f43';
-                statusEl.innerText = "❌ Thất bại (Mã: " + res.status + ")";
+                statusEl.innerText = '❌ Thất bại (Mã: ' + res.status + ')';
             }
         } catch (err) {
             statusEl.style.color = '#f23f43';
-            statusEl.innerText = '❌ Lỗi kết nối!';
+            statusEl.innerText = '❌ Lỗi kết nối mạng!';
         }
     }
 
@@ -239,18 +250,45 @@ const SCRIPT_CODE = `(() => {
     document.getElementById('btn-balance').onclick = () => applyBadge(3);
     document.getElementById('btn-remove').onclick = () => applyBadge(0);
     document.getElementById('btn-close').onclick = () => modal.remove();
-})();\`;
+})();
+</textarea>
 
+<script>
 function copyScript() {
-    navigator.clipboard.writeText(SCRIPT_CODE).then(() => {
-        const btn = document.getElementById('copyBtn');
+    const code = document.getElementById('codeSource').value.trim();
+    const btn = document.getElementById('copyBtn');
+
+    function showSuccess() {
         btn.innerHTML = '✅ ĐÃ SAO CHÉP VÀO CLIPBOARD!';
         btn.classList.add('copied');
         setTimeout(() => {
             btn.innerHTML = '📋 SAO CHÉP MÃ KÍCH HOẠT (1-CLICK)';
             btn.classList.remove('copied');
         }, 3000);
-    });
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code).then(showSuccess).catch(() => fallbackCopy(code));
+    } else {
+        fallbackCopy(code);
+    }
+
+    function fallbackCopy(text) {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        temp.style.position = 'fixed';
+        temp.style.left = '-9999px';
+        document.body.appendChild(temp);
+        temp.focus();
+        temp.select();
+        try {
+            document.execCommand('copy');
+            showSuccess();
+        } catch (err) {
+            alert('Vui lòng cấp quyền sao chép trên trình duyệt của bạn!');
+        }
+        document.body.removeChild(temp);
+    }
 }
 </script>
 
